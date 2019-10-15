@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
-from model import net_seq
-from utils import get_error, avg_list
-from data_loader import batching_data
-import fixed_config
-import os
-import numpy as np
+
+from configs import fixed_config
+from data.data_loader import batching_data
+from models.seq_net import SeqNet
+from utils.utils import get_error, avg_list
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device:', device)
 
@@ -15,11 +15,11 @@ class Train(object):
         self.model_dir = args.model_dir
         self.train_data, self.val_data= batching_data(args)
         self.test_data = batching_data("test")
-        self.model1 = net_seq(fixed_config.hidden_dim)
-        self.model2 = net_seq(fixed_config.hidden_dim)
-        self.model3 = net_seq(fixed_config.hidden_dim)
-        self.model4 = net_seq(fixed_config.hidden_dim)
-        self.model5 = net_seq(fixed_config.hidden_dim)
+        self.model1 = SeqNet(fixed_config.hidden_dim)
+        self.model2 = SeqNet(fixed_config.hidden_dim)
+        self.model3 = SeqNet(fixed_config.hidden_dim)
+        self.model4 = SeqNet(fixed_config.hidden_dim)
+        self.model5 = SeqNet(fixed_config.hidden_dim)
         self.model_list = [self.model1, self.model2, self.model3, self.model4, self.model5]
         self.criterion = nn.NLLLoss()
         self.optimizer1 = torch.optim.SGD(self.model1.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
