@@ -28,11 +28,12 @@ def train_epochs(args):
 
     return training_accuracies, testing_accuracies
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # Default hyper-parameters:
-    parser.add_argument("-mode", type=str, default="train")
+    parser.add_argument("-mode", type=str, default="cross_validation")
     parser.add_argument("-batch_size", type=int, default=32)
     parser.add_argument("-hidden_dim", type=int, default=10)
     parser.add_argument("-learning_rate", type=float, default=1e-2)

@@ -13,13 +13,15 @@ print('Using device:', device)
 class Train(object):
     def __init__(self, args):
         self.model_dir = args.model_dir
-        self.train_data, self.val_data= batching_data(args)
-        self.test_data = batching_data("test")
-        self.model1 = SeqNet(fixed_config.hidden_dim)
-        self.model2 = SeqNet(fixed_config.hidden_dim)
-        self.model3 = SeqNet(fixed_config.hidden_dim)
-        self.model4 = SeqNet(fixed_config.hidden_dim)
-        self.model5 = SeqNet(fixed_config.hidden_dim)
+        self.train_data, self.val_data = batching_data("cross_validation")
+        # self.train_data = batching_data("train")
+        args.mode = 'test'
+        self.test_data = batching_data(args)
+        self.model1 = SeqNet(fixed_config.hidden_dim).to(device)
+        self.model2 = SeqNet(fixed_config.hidden_dim).to(device)
+        self.model3 = SeqNet(fixed_config.hidden_dim).to(device)
+        self.model4 = SeqNet(fixed_config.hidden_dim).to(device)
+        self.model5 = SeqNet(fixed_config.hidden_dim).to(device)
         self.model_list = [self.model1, self.model2, self.model3, self.model4, self.model5]
         self.criterion = nn.NLLLoss()
         self.optimizer1 = torch.optim.SGD(self.model1.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
@@ -42,13 +44,15 @@ class Train(object):
             model = self.model_list[i]
             optimizer = self.optimizer_list[i]
 
-            for j, (trainXX, trainYY) in enumerate(self.train_data[i]):
+            for j, (x, y) in enumerate(self.train_data[i]):
+                x, y = x.float().to(device), y.long().to(device)
                 optimizer.zero_grad()
-                scores = model(trainXX)
-                loss = self.criterion(scores, trainYY)
+                scores = model(x)
+                loss = self.criterion(scores, y)
+                print(loss)
                 # backward pass to compute dL/dU, dL/dV and dL/dW
                 loss.backward()
-                accuracy = 1 - get_error(scores, trainYY)
+                accuracy = 1 - get_error(scores, y)
                 # do one step of stochastic gradient descent: U=U-lr(dL/dU), V=V-lr(dL/dU), ...
                 optimizer.step()
                 train_losses.append(loss)
@@ -57,6 +61,8 @@ class Train(object):
 
             with torch.no_grad():
                 for x, y in self.val_data[i]:
+                    x, y = x.float().to(device), y.long().to(device)
+
                     validation_outputs = model(x)
                     validation_accuracy = 1 - get_error(validation_outputs, y)
                     validation_accuracies.append(validation_accuracy)
@@ -70,10 +76,3 @@ class Train(object):
                 test_accuracy = 1 - get_error(test_outputs, y)
 
         return avg_list(train_accuracies) / len(train_accuracies), test_accuracy
-
-
-
-
-
-
-
