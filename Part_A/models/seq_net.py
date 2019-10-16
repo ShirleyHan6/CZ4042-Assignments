@@ -1,9 +1,9 @@
 import torch.nn as nn
 
 
-class net_seq(nn.Module):
+class SeqNet(nn.Module):
     def __init__(self, hidden_dim):
-        super(net_seq, self).__init__()
+        super().__init__()
         self.seq = nn.Sequential(
             nn.Linear(21, hidden_dim, bias=True),
             nn.Linear(hidden_dim, 3, bias=True),

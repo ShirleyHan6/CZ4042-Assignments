@@ -1,8 +1,9 @@
 import numpy as np
 import torch
-
-import fixed_config
 import torch.utils.data
+
+from configs import fixed_config
+
 
 def MinMaxScale(X, X_min, X_max):
     return (X - X_min) / (X_max - X_min)
