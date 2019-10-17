@@ -8,7 +8,6 @@ class SeqNet(nn.Module):
             nn.Linear(21, hidden_dim, bias=True),
             nn.Linear(hidden_dim, 3, bias=True),
             nn.ReLU(),
-            nn.LogSoftmax(dim=1)
         )
 
     def forward(self, x):
