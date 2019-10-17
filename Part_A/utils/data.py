@@ -1,5 +1,3 @@
-from typing import Generator
-
 import numpy as np
 from torch.utils import data as tdata
 
@@ -30,7 +28,7 @@ def get_indices(n_splits, n):
         yield (indices[int(start):int(stop)])
 
 
-def k_folds(data: tdata.Dataset, n_splits: int) -> Generator[tdata.Subset]:
+def k_folds(data: tdata.Dataset, n_splits: int):
     """
     Generates folds for cross validation
     Args:
