@@ -8,9 +8,6 @@ from torch.optim.optimizer import Optimizer
 from utils.data import k_folds
 from utils.utils import get_accuracy
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print('Using device:', device)
-
 
 class Trainer(object):
     def __init__(self, **kwargs):
@@ -21,11 +18,13 @@ class Trainer(object):
         self.epoch: int = kwargs.pop('epoch')
         self.batch: int = kwargs.pop('batch')
         self.optimizer: Optimizer = kwargs.pop('optimizer')
-        self.device: str = kwargs.pop('device')
+        device: str = kwargs.pop('device')
         self.fold_num: int = kwargs.pop('fold_num')
         self.criterion = nn.CrossEntropyLoss()
 
-        self.model = self.model.to(self.device)
+        if not device:
+            device = 'cpu'
+        self.device = torch.device(device)
 
     def k_fold_data_loader(self):
         if not self.fold_num:
@@ -39,6 +38,7 @@ class Trainer(object):
         training_loss = 0.0
         training_acc = 0
         dataset_size = len(train_loader.dataset)
+        self.model.to(self.device)
 
         for step, data in enumerate(train_loader, 0):
             # get data
