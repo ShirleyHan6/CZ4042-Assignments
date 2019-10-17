@@ -1,3 +1,5 @@
+from typing import Generator
+
 import numpy as np
 from torch.utils import data as tdata
 
@@ -28,16 +30,15 @@ def get_indices(n_splits, n):
         yield (indices[int(start):int(stop)])
 
 
-def k_folds(data: tdata.Dataset, target: tdata.Dataset, n_splits: int):
+def k_folds(data: tdata.Dataset, n_splits: int) -> Generator[tdata.Subset]:
     """
     Generates folds for cross validation
     Args:
         data:
-        target:
         n_splits: folds number
     """
     n = len(data)
     indices = np.arange(n).astype(int)
-    for test_idx in get_indices(n_splits, n):
-        train_idx = np.setdiff1d(indices, test_idx)
-        yield tdata.Subset(data, train_idx), tdata.Subset(target, test_idx)
+    for val_idx in get_indices(n_splits, n):
+        train_idx = np.setdiff1d(indices, val_idx)
+        yield tdata.Subset(data, train_idx), tdata.Subset(data, val_idx)

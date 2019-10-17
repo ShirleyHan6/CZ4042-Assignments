@@ -1,17 +1,24 @@
 import matplotlib.pyplot as plt
+import torch.nn as nn
 
 
 def avg_list(alist):
     return sum(alist) / len(alist)
 
 
-def get_error(scores, labels):
-    bs = scores.size(0)
+def get_accuracy(scores, labels):
     predicted_labels = scores.argmax(dim=1)
     indicator = (predicted_labels == labels)
     num_matches = indicator.sum()
 
-    return 1 - num_matches.float() / bs
+    return num_matches.float()
+
+
+def init_weight(m):
+    if isinstance(m, nn.Linear):
+        nn.init.xavier_uniform(m.weight)
+        if m.bias:
+            nn.init.xavier_normal(m.bias)
 
 
 def plot_multiple_curves(x, y_list, legends_list):
