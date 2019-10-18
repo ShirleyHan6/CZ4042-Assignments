@@ -16,6 +16,14 @@ def get_accuracy(scores, labels):
 
 
 def init_weight(m):
+    """
+    General weight initializer from https://gist.github.com/jeasinema/ed9236ce743c8efaf30fa2ff732749f5
+    Args:
+        :param m:
+    Usage:
+        model = Model()
+        model.apply(weight_init)
+    """
     if isinstance(m, nn.Conv1d):
         init.normal_(m.weight.data)
         if m.bias is not None:
