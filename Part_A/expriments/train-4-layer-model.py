@@ -21,10 +21,10 @@ optimizer = torch.optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay
 train_accs, val_accs = classification_train(model=model, optimizer=optimizer, dataset=train_dataset,
                                             val_dataset=test_dataset,
                                             save_dir='../output', save_epoch=save_epoch, name='seqnet',
-                                            log_dir='../logs',
+                                            log_dir='../log',
                                             epoch=epoch, batch=batch_size, device='cuda')
 
 with open('val-accs-seq-4.pickle', 'wb') as f:
     pickle.dump(val_accs, f)
-with open('val-accs-seq-4.pickle', 'wb') as f:
+with open('train-accs-seq-4.pickle', 'wb') as f:
     pickle.dump(train_accs, f)

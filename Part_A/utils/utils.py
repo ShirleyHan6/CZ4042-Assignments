@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 import torch.nn as nn
 import torch.nn.init as init
 
@@ -8,7 +9,7 @@ def avg_list(alist):
     return sum(alist) / len(alist)
 
 
-def get_accuracy(scores, labels):
+def get_accuracy(scores: torch.Tensor, labels: torch.Tensor):
     predicted_labels = scores.argmax(dim=1)
     indicator = (predicted_labels == labels)
     num_matches = indicator.sum()
@@ -88,11 +89,22 @@ def init_weight(m):
 
 
 def plot_train_val_accuracies(train_accs, val_accs):
-    epochs = np.arange(1, len(val_accs[0]) + 1)
+    epochs = np.arange(1, len(val_accs) + 1)
     fig = plt.figure()
     ax = fig.add_axes([0.1, 0.1, 0.6, 0.75])
     ax.plot(epochs, train_accs, label='train accuracy')
     ax.plot(epochs, val_accs, label='test accuracy')
+    plt.title('Train and test accuracy against epoch')
+    plt.show()
+
+
+def plot_train_val_loss(train_loss, val_loss):
+    epochs = np.arange(1, len(val_loss) + 1)
+    fig = plt.figure()
+    ax = fig.add_axes([0.1, 0.1, 0.6, 0.75])
+    ax.plot(epochs, train_loss, label='train loss')
+    ax.plot(epochs, val_loss, label='test loss')
+    plt.yscale('log')
     plt.title('Train and test accuracy against epoch')
     plt.show()
 

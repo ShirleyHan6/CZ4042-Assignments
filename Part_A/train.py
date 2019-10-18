@@ -1,9 +1,10 @@
 from datetime import datetime
 from pathlib import Path
 
+import torch.nn as nn
 from tqdm import trange
 
-from trainning.training import Trainer
+from trainning.training import ClassificationTrainer, RegressionTrainer
 from utils.utils import init_weight
 
 
@@ -29,7 +30,7 @@ def classification_train(**kwargs):
     log_dir = kwargs.pop('log_dir')
     log_path = Path(log_dir).absolute() / (datetime.now().strftime('%Y%m%d-%H%M%S') + '.log')
 
-    trainer = Trainer(log_path=str(log_path), **kwargs)
+    trainer = ClassificationTrainer(log_path=str(log_path), **kwargs)
 
     train_fold_acc = []
     val_fold_acc = []
@@ -55,20 +56,17 @@ def classification_train(**kwargs):
         return classification_train_(trainer, train_loader=train_loader, val_loader=val_loader)
 
 
-def classification_train_(trainer: Trainer, *, train_loader, val_loader, save_name=None):
+def classification_train_(trainer: ClassificationTrainer, *, train_loader, val_loader, save_name=None):
     if save_name is None:
         save_name = trainer.name
 
     train_accs = []
     val_accs = []
     trainer.model.apply(init_weight)
-    # reset optimizer
-    # TODO
-
     t = trange(trainer.epoch, desc='')
     for epoch in t:
         _, train_acc = trainer.train(train_loader, epoch, save_name)
-        val_acc = trainer.validation(val_loader, epoch)
+        _, val_acc = trainer.validation(val_loader, epoch)
 
         train_accs.append(train_acc)
         val_accs.append(val_acc)
@@ -76,3 +74,27 @@ def classification_train_(trainer: Trainer, *, train_loader, val_loader, save_na
         t.set_description('train acc {:.3f} | val acc {:.3f}'.format(train_acc, val_acc))
 
     return train_accs, val_accs
+
+
+def regression_train(**kwargs):
+    log_dir = kwargs.pop('log_dir')
+    log_path = Path(log_dir).absolute() / (datetime.now().strftime('%Y%m%d-%H%M%S') + '.log')
+
+    trainer = RegressionTrainer(log_path=str(log_path), criterion=nn.MSELoss(), **kwargs)
+    train_loader, val_loader = trainer.data_loader()
+
+    train_losses = []
+    val_losses = []
+
+    trainer.model.apply(init_weight)
+    t = trange(trainer.epoch, desc='')
+    for epoch in t:
+        train_loss = trainer.train(train_loader, epoch, trainer.name)
+        val_loss = trainer.validation(val_loader, epoch)
+
+        t.set_description('train loss {:.3f} | val loss {:.3f}'.format(train_loss, val_loss))
+
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
+
+    return train_losses, val_losses
