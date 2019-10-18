@@ -7,7 +7,7 @@ from trainning.training import Trainer
 from utils.utils import init_weight
 
 
-def train(**kwargs):
+def classification_train(**kwargs):
     """
 
     Args:
@@ -39,32 +39,26 @@ def train(**kwargs):
         # get data_loader for fold i
         for fold_num, data_loader in enumerate(data_loader_iter, 0):
             print('Fold ' + str(fold_num))
-            train_accs = []
-            val_accs = []
 
             train_loader, val_loader = data_loader
-            # reset model
-            trainer.model.apply(init_weight)
-            # reset optimizer
-            # TODO
-            t = trange(trainer.epoch, desc='')
-            for epoch in t:
-                _, train_acc = trainer.train(train_loader, epoch, trainer.name + '-fold-' + str(fold_num))
-                val_acc = trainer.validation(val_loader, epoch)
+            train_accs, val_accs = classification_train_(
+                trainer,
+                train_loader=train_loader,
+                val_loader=val_loader,
+                save_name='{}-fold-{}'.format(trainer.name, fold_num))
 
-                train_accs.append(train_acc)
-                val_accs.append(val_acc)
-
-                t.set_description('train acc {:.3f} | val acc {:.3f}'.format(train_acc, val_acc))
             train_fold_acc.append(train_accs)
             val_fold_acc.append(val_accs)
         return train_fold_acc, val_fold_acc
     else:
         train_loader, val_loader = trainer.data_loader()
-        return _train(trainer, train_loader, val_loader)
+        return classification_train_(trainer, train_loader=train_loader, val_loader=val_loader)
 
 
-def _train(trainer, train_loader, val_loader):
+def classification_train_(trainer: Trainer, *, train_loader, val_loader, save_name=None):
+    if save_name is None:
+        save_name = trainer.name
+
     train_accs = []
     val_accs = []
     trainer.model.apply(init_weight)
@@ -72,7 +66,7 @@ def _train(trainer, train_loader, val_loader):
     # TODO
     t = trange(trainer.epoch, desc='')
     for epoch in t:
-        _, train_acc = trainer.train(train_loader, epoch, trainer.name)
+        _, train_acc = trainer.train(train_loader, epoch, save_name)
         val_acc = trainer.validation(val_loader, epoch)
 
         train_accs.append(train_acc)
