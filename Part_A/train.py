@@ -64,6 +64,7 @@ def classification_train_(trainer: Trainer, *, train_loader, val_loader, save_na
     trainer.model.apply(init_weight)
     # reset optimizer
     # TODO
+
     t = trange(trainer.epoch, desc='')
     for epoch in t:
         _, train_acc = trainer.train(train_loader, epoch, save_name)

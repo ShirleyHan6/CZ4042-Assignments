@@ -44,8 +44,8 @@ class Trainer(object):
         return train_loader, val_loader
 
     def train(self, train_loader: tdata.DataLoader, epoch: int, save_name: str):
-        training_loss: torch.Tensor = torch.zeros(1).float()
-        training_acc: torch.Tensor = torch.zeros(1).long()
+        training_loss: torch.Tensor = 0
+        training_acc: torch.Tensor = 0
         dataset_size = len(train_loader.dataset)
         self.model.to(self.device)
 
@@ -70,8 +70,10 @@ class Trainer(object):
         # print accuracy and loss after each epoch
         training_loss /= dataset_size
         training_acc /= dataset_size
-        self.logger.info('[epoch {:d}] loss: {:.3f}, accuracy: {:.3f}'.format(epoch + 1, training_loss,
-                                                                              training_acc))
+
+        print(training_loss.item())
+        # self.logger.info('[epoch {:d}] loss: {:.3f}, accuracy: {:.3f}'.format(epoch + 1, training_loss.item(),
+        #                                                                                  training_acc))
         # saving model
         if (epoch + 1) % self.save_epoch == 0 or epoch + 1 == self.epoch:
             save_name = self.save_dir / '{}-epoch-{:d}.pth'.format(save_name, epoch + 1)
