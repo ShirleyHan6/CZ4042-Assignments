@@ -71,9 +71,9 @@ class Trainer(object):
         training_loss /= dataset_size
         training_acc /= dataset_size
 
-        print(training_loss.item())
-        # self.logger.info('[epoch {:d}] loss: {:.3f}, accuracy: {:.3f}'.format(epoch + 1, training_loss.item(),
-        #                                                                                  training_acc))
+        # print(training_loss.item())
+        self.logger.info('[epoch {:d}] loss: {:.3f}, accuracy: {:.3f}'.format(epoch + 1, training_loss.item(),
+                                                                                         training_acc))
         # saving model
         if (epoch + 1) % self.save_epoch == 0 or epoch + 1 == self.epoch:
             save_name = self.save_dir / '{}-epoch-{:d}.pth'.format(save_name, epoch + 1)
