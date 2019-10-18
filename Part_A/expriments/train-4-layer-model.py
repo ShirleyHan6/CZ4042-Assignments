@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import torch
@@ -6,6 +7,9 @@ from dataset import simple_dataset, preprocessing
 from models.seq_net import SeqNet4
 from train import classification_train
 from utils.data import split_test_data
+
+os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 model = SeqNet4()
 weight_decay = 10e-6
