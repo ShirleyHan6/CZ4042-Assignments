@@ -24,7 +24,7 @@ for hidden_num in hidden_nums:
     model = SeqNet(hidden_num)
     optimizer = torch.optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay)
     _, val_accs = classification_train(model=model, optimizer=optimizer, dataset=train_dataset,
-                                       save_dir='output', save_epoch=save_epoch, name='seqnet', log_dir='../log',
+                                       save_dir='../output', save_epoch=save_epoch, name='seqnet', log_dir='../log',
                                        epoch=epoch, batch=optimal_batch_size, device='cuda', fold_num=5)
 
     val_accs_avg = np.array(val_accs).mean(axis=0).tolist()
@@ -38,7 +38,8 @@ model = SeqNet(optimal_hidden_num)
 optimizer = torch.optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay)
 train_accs, val_accs = classification_train(model=model, optimizer=optimizer, dataset=train_dataset,
                                             val_dataset=test_dataset,
-                                            save_dir='output', save_epoch=save_epoch, name='seqnet', log_dir='../log',
+                                            save_dir='../output', save_epoch=save_epoch, name='seqnet',
+                                            log_dir='../log',
                                             epoch=epoch, batch=optimal_batch_size, device='cuda')
 with open('train-accs-opt-hidden-num.pickle', 'wb') as f:
     pickle.dump(train_accs, f)

@@ -44,8 +44,8 @@ class Trainer(object):
         return train_loader, val_loader
 
     def train(self, train_loader: tdata.DataLoader, epoch: int, save_name: str):
-        training_loss = 0.0
-        training_acc = 0
+        training_loss: torch.Tensor = torch.zeros(1).float()
+        training_acc: torch.Tensor = torch.zeros(1).long()
         dataset_size = len(train_loader.dataset)
         self.model.to(self.device)
 
