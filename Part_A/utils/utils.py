@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import torch.nn as nn
 import torch.nn.init as init
 
@@ -86,13 +87,26 @@ def init_weight(m):
                 init.normal_(param.data)
 
 
-def plot_multiple_curves(x, y_list, legends_list):
-    for i in y_list:
-        plt.plot(x, i)
+def plot_train_val_accuracies(train_accs, val_accs):
+    epochs = np.arange(1, len(val_accs[0]) + 1)
+    fig = plt.figure()
+    ax = fig.add_axes([0.1, 0.1, 0.6, 0.75])
+    ax.plot(epochs, train_accs, label='train accuracy')
+    ax.plot(epochs, val_accs, label='test accuracy')
+    plt.title('Train and test accuracy against epoch')
+    plt.show()
 
-    plt.xlabel('training epoch')
-    plt.ylabel('training loss')
-    plt.title('Question 1')
 
-    plt.legend(legends_list, loc='upper left')
+def plot_batched_accuracies(acc_dict: dict, *, label_base: str = ''):
+    keys, val_accs = list(acc_dict.keys()), list(acc_dict.values())
+
+    orders = np.arange(1, len(val_accs[0]) + 1)
+
+    # plot val_accs against epochs
+    fig = plt.figure()
+    ax = fig.add_axes([0.1, 0.1, 0.6, 0.75])
+    for i in range(len(val_accs)):
+        ax.plot(orders, val_accs[i], label=(label_base + str(keys[i])))
+        ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    plt.title('Validation accuracy against epoch')
     plt.show()
