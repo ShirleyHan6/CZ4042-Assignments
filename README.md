@@ -3,7 +3,7 @@
 ## Install
 ```shell script
 # create Conda environemnt
-conda create -f environment.yml
+conda env create -f environment.yml
 
 conda install pytorch torchvision cudatoolkit=<your cuda version> -c pytorch -y
 
@@ -11,7 +11,7 @@ conda install pytorch torchvision cudatoolkit=<your cuda version> -c pytorch -y
 conda activate ntu-dl
 
 # create output directory
-mkdir -p {data,log,output}
+mkdir -p {log,output}
 ```
 ## Demo
 See experiments folder.

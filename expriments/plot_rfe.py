@@ -1,6 +1,8 @@
 import pickle
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+
 font = {'family' : 'normal',
         'weight' : 'bold',
         'size'   : 6.5}

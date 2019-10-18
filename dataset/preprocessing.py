@@ -25,7 +25,7 @@ def admission_rfe_preprocessor_factory(a_list):
     def preprocessor(dataset: torch.Tensor):
         data = dataset[1:, 1:8].float()
         label = dataset[1:, -1].float().unsqueeze(1)
-        data = torch.index_select(data, 1, torch.Tensor(a_list).long())
+        data = torch.index_select(data, 1, torch.LongTensor(a_list))
 
         return data, label
     return preprocessor
