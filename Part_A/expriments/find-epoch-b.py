@@ -1,4 +1,3 @@
-import os
 import pickle
 
 import torch
@@ -7,9 +6,6 @@ from dataset import simple_dataset, preprocessing
 from models.addmission_net import AdmissionNet
 from train import regression_train
 from utils.data import split_test_data
-
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 epoch = 5000
 batch = 8

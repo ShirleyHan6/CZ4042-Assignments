@@ -15,12 +15,13 @@ with open('train-accs-opt-batch.pickle', 'rb') as f:
 with open('val-accs-opt-batch.pickle', 'rb') as f:
     val_accs: list = pickle.load(f)
 
+
 plot_batched_accuracies(val_accs_dict, label_base='batch = ')
 
 # plot time against batch sizes
 fig = plt.figure()
 ax = fig.add_axes([0.1, 0.1, 0.6, 0.75])
-ax.plot(time_dict.keys(), time_dict.values(), marker='o')
+ax.plot(list(time_dict.keys()), list(time_dict.values()), marker='o')
 plt.title('Time taken against batch size')
 plt.show()
 

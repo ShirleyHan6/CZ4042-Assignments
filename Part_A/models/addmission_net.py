@@ -16,9 +16,9 @@ class AdmissionNet(nn.Module):
 
 
 class AdmissionNet4(nn.Module):
-    def __init__(self, input_num):
+    def __init__(self, input_num, dropout=False):
         super().__init__()
-        self.seq = nn.Sequential(
+        seq_list = [
             nn.Linear(input_num, 50, bias=True),
             nn.ReLU(),
             nn.Linear(50, 50, bias=True),
@@ -26,30 +26,39 @@ class AdmissionNet4(nn.Module):
             nn.Linear(50, 50, bias=True),
             nn.ReLU(),
             nn.Linear(50, 1, bias=True)
-        )
-        self.dropout = nn.Dropout(0.8)
+        ]
+        if dropout:
+            seq_list.insert(2, nn.Dropout(0.2))
+            seq_list.insert(5, nn.Dropout(0.2))
+            seq_list.insert(8, nn.Dropout(0.2))
+        self.seq = nn.Sequential(*seq_list)
 
     def forward(self, *args):
         x = args[0]
-        out = self.seq(x)
-        return self.dropout(out)
+        return self.seq(x)
 
 
 class AdmissionNet5(nn.Module):
-    def __init__(self, input_num):
+    def __init__(self, input_num, dropout=False):
         super().__init__()
-        self.seq = nn.Sequential(
+        seq_list = [
             nn.Linear(input_num, 50, bias=True),
             nn.ReLU(),
             nn.Linear(50, 50, bias=True),
             nn.ReLU(),
             nn.Linear(50, 50, bias=True),
             nn.ReLU(),
+            nn.Linear(50, 50, bias=True),
+            nn.ReLU(),
             nn.Linear(50, 1, bias=True)
-        )
-        self.dropout = nn.Dropout(0.8)
+        ]
+        if dropout:
+            seq_list.insert(2, nn.Dropout(0.2))
+            seq_list.insert(5, nn.Dropout(0.2))
+            seq_list.insert(8, nn.Dropout(0.2))
+            seq_list.insert(11, nn.Dropout(0.2))
+        self.seq = nn.Sequential(*seq_list)
 
     def forward(self, *args):
         x = args[0]
-        out = self.seq(x)
-        return self.dropout(out)
+        return self.seq(x)
