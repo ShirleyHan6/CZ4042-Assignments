@@ -63,20 +63,20 @@ class Trainer(ABC):
             loss.backward()
             self.optimizer.step()
 
-            training_loss += loss
+            training_loss += loss.item()
 
             self.model.eval()
             self.train_step_hook(step=step, outputs=outputs, labels=labels)
         # print accuracy and loss after each epoch
         training_loss /= dataset_size
         self.train_epoch_hook(dataset_size=dataset_size, epoch=epoch, loss=training_loss)
-        self.logger.info('[epoch {:d}] loss: {:.3f}'.format(epoch + 1, training_loss))
+        self.logger.info('[epoch {:d}] loss: {:g}'.format(epoch + 1, training_loss))
         # saving model
         if (epoch + 1) % self.save_epoch == 0 or epoch + 1 == self.epoch:
             save_name = self.save_dir / '{}-epoch-{:d}.pth'.format(save_name, epoch + 1)
             torch.save(self.model.state_dict(), save_name)
 
-        return training_loss.cpu().item()
+        return training_loss
 
     def validation(self, val_loader: tdata.DataLoader, epoch: int):
         val_loss = 0.
@@ -90,13 +90,13 @@ class Trainer(ABC):
                 labels = labels.to(self.device)
 
                 validation_outputs = self.model(inputs)
-                val_loss += self.criterion(validation_outputs, labels)
+                val_loss += self.criterion(validation_outputs, labels).item()
                 self.validation_step_hook(step=step, outputs=validation_outputs, labels=labels)
         val_loss /= dataset_size
         self.validation_epoch_hook(epoch=epoch, dataset_size=dataset_size)
-        self.logger.info('[epoch {:d}] val loss: {:.3f}'.format(epoch + 1, val_loss))
+        self.logger.info('[epoch {:d}] val loss: {:g}'.format(epoch + 1, val_loss))
 
-        return val_loss.cpu().item()
+        return val_loss
 
     def train_step_hook(self, **kwargs):
         pass
@@ -127,12 +127,12 @@ class ClassificationTrainer(Trainer):
     def train(self, train_loader: tdata.DataLoader, epoch: int, save_name: str):
         self.__train_accuracy = 0.
         loss = super().train(train_loader, epoch, save_name)
-        return loss, self.__train_accuracy.cpu().item()
+        return loss, self.__train_accuracy
 
     def validation(self, val_loader: tdata.DataLoader, epoch: int):
         self.__validation_accuracy = 0.
         loss = super().validation(val_loader, epoch)
-        return loss, self.__validation_accuracy.cpu().item()
+        return loss, self.__validation_accuracy
 
     def train_step_hook(self, *, outputs, labels):
         self.__train_accuracy += get_accuracy(outputs, labels)
