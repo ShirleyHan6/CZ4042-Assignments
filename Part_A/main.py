@@ -2,7 +2,6 @@ import argparse
 
 import numpy as np
 
-from training import Train
 from utils.utils import plot_multiple_curves
 
 np.random.seed(10)
@@ -15,18 +14,6 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
-
-
-def train_epochs(args):
-    train = Train(args)
-    training_accuracies = []
-    testing_accuracies = []
-    for i in range(1, args.epochs + 1):
-        train_accuracy, test_accuracy = train.train_one_epoch()
-        training_accuracies.append(train_accuracy)
-        testing_accuracies.append(test_accuracy)
-
-    return training_accuracies, testing_accuracies
 
 
 if __name__ == '__main__':

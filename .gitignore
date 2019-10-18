@@ -176,3 +176,6 @@ tags
 *.exe
 *.app
 
+# MISC
+log/
+output/
