@@ -11,11 +11,11 @@ from utils.data import split_test_data
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-epoch = 1000
-batch = 8
+epoch = 5000
+batch = 64
 lr = 1e-3
 weight_decay = 1e-3
-save_epoch = 1000
+save_epoch = 5000
 
 dataset = simple_dataset.SimpleDataset('../data/admission_predict.csv', preprocessing.admission_preprocessor)
 train_dataset, test_dataset = split_test_data(dataset)

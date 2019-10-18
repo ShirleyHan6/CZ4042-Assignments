@@ -92,7 +92,7 @@ def regression_train(**kwargs):
         train_loss = trainer.train(train_loader, epoch, trainer.name)
         val_loss = trainer.validation(val_loader, epoch)
 
-        t.set_description('train loss {:.3f} | val loss {:.3f}'.format(train_loss, val_loss))
+        t.set_description('train loss {:g} | val loss {:g}'.format(train_loss, val_loss))
 
         train_losses.append(train_loss)
         val_losses.append(val_loss)
