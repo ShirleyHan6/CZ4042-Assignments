@@ -6,8 +6,8 @@ class SeqNet(nn.Module):
         super().__init__()
         self.seq = nn.Sequential(
             nn.Linear(21, hidden_dim, bias=True),
-            nn.Linear(hidden_dim, 3, bias=True),
             nn.ReLU(),
+            nn.Linear(hidden_dim, 3, bias=True),
         )
 
     def forward(self, x):
@@ -19,10 +19,10 @@ class SeqNet4(nn.Module):
         super().__init__()
         self.seq = nn.Sequential(
             nn.Linear(21, 10, bias=True),
+            nn.ReLU(),
             nn.Linear(10, 10, bias=True),
             nn.ReLU(),
             nn.Linear(10, 3, bias=True),
-            nn.ReLU(),
         )
 
     def forward(self, x):

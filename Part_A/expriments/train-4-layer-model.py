@@ -26,5 +26,5 @@ train_accs, val_accs = classification_train(model=model, optimizer=optimizer, da
 
 with open('val-accs-seq-4.pickle', 'wb') as f:
     pickle.dump(val_accs, f)
-with open('val-accs-seq-4.pickle', 'wb') as f:
+with open('train-accs-seq-4.pickle', 'wb') as f:
     pickle.dump(train_accs, f)

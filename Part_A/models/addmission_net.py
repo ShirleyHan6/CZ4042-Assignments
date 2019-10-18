@@ -6,9 +6,8 @@ class AdmissionNet(nn.Module):
         super().__init__()
         self.seq = nn.Sequential(
             nn.Linear(input_num, 10, bias=True),
-            nn.Linear(10, 3, bias=True),
             nn.ReLU(),
-            nn.LogSoftmax(dim=1)
+            nn.Linear(10, 1, bias=True),
         )
 
     def forward(self, *args):
