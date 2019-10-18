@@ -1,6 +1,6 @@
-import seaborn as sns
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 data = pd.read_csv("../data/admission_predict.csv")
 

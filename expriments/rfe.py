@@ -2,7 +2,6 @@ import os
 import pickle
 
 import torch
-import matplotlib as plt
 
 from dataset import simple_dataset, preprocessing
 from models.addmission_net import AdmissionNet
