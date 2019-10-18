@@ -8,11 +8,11 @@ from models.seq_net import SeqNet
 from train import classification_train
 from utils.data import split_test_data
 
-epoch = 5
-optimal_batch_size = ?
+epoch = 2000
+optimal_batch_size = 8
 lr = 0.01
 weight_decay = 1e-6
-save_epoch = 5000
+save_epoch = 2000
 hidden_nums = [5, 10, 15, 20, 25]
 
 dataset = simple_dataset.SimpleDataset('../data/ctg_data_cleaned.csv', preprocessing.cla_preprocessor)
@@ -30,10 +30,10 @@ for hidden_num in hidden_nums:
     val_accs_avg = np.array(val_accs).mean(axis=0).tolist()
     val_accs_dict[hidden_num] = val_accs_avg
 
-with open('val-accs-hidden-num.pickle', 'wb') as f:
+with open('val-accs-hidden-num-1.pickle', 'wb') as f:
     pickle.dump(val_accs_dict, f)
 #################################
-optimal_hidden_num = ?
+optimal_hidden_num = 20
 model = SeqNet(optimal_hidden_num)
 optimizer = torch.optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay)
 train_accs, val_accs = classification_train(model=model, optimizer=optimizer, dataset=train_dataset,

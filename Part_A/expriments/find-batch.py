@@ -9,11 +9,11 @@ from models.seq_net import SeqNet
 from train import classification_train
 from utils.data import split_test_data
 
-epoch = 6000
+epoch = 2000
 batch_sizes = [4, 8, 16, 32, 64]
 lr = 0.01
 weight_decay = 1e-6
-save_epoch = 5000
+save_epoch = 2000
 
 dataset = simple_dataset.SimpleDataset('../data/ctg_data_cleaned.csv', preprocessing.cla_preprocessor)
 train_dataset, test_dataset = split_test_data(dataset)
@@ -43,12 +43,14 @@ with open('val-accs-batch.pickle', 'wb') as f:
 with open('time-batch.pickle', 'wb') as f:
     pickle.dump(time_dict, f)
 
-# optimal_batch_size = ?
-# train_accs, val_accs = train(model=model, optimizer=optimizer, dataset=train_dataset, val_dataset=test_dataset,
-#                              save_dir='output', save_epoch=save_epoch, name='seqnet', log_dir='../log',
-#                              epoch=epoch, batch=optimal_batch_size, device='cuda')
-# with open('train-accs-opt-batch.pickle', 'wb') as f:
-#     pickle.dump(train_accs, f)
-#
-# with open('val-accs-opt-batch.pickle', 'wb') as f:
-#     pickle.dump(val_accs, f)
+optimal_batch_size = 8
+train_accs, val_accs = classification_train(model=model, optimizer=optimizer, dataset=train_dataset,
+                                            val_dataset=test_dataset,
+                                            save_dir='../output', save_epoch=save_epoch, name='seqnet',
+                                            log_dir='../log',
+                                            epoch=epoch, batch=optimal_batch_size, device='cuda')
+with open('train-accs-opt-batch.pickle', 'wb') as f:
+    pickle.dump(train_accs, f)
+
+with open('val-accs-opt-batch.pickle', 'wb') as f:
+    pickle.dump(val_accs, f)

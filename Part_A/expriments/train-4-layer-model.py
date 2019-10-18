@@ -1,4 +1,3 @@
-import os
 import pickle
 
 import torch
@@ -8,15 +7,12 @@ from models.seq_net import SeqNet4
 from train import classification_train
 from utils.data import split_test_data
 
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 model = SeqNet4()
 weight_decay = 10e-6
 batch_size = 32
-epoch = 5000
+epoch = 2000
 lr = 0.01
-save_epoch = 5000
+save_epoch = 2000
 
 dataset = simple_dataset.SimpleDataset('../data/ctg_data_cleaned.csv', preprocessing.cla_preprocessor)
 train_dataset, test_dataset = split_test_data(dataset)
