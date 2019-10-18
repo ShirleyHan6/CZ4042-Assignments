@@ -8,6 +8,7 @@ USED_data = data[['GRE Score', 'TOEFL Score', 'University Rating', 'SOP', 'LOR',
 
 print(USED_data.head())
 corr = USED_data.corr()
+print(corr)
 ax = sns.heatmap(
     corr,
     vmin=-1, vmax=1, center=0,
