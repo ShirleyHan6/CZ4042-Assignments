@@ -134,14 +134,14 @@ class ClassificationTrainer(Trainer):
         loss = super().validation(val_loader, epoch)
         return loss, self.__validation_accuracy
 
-    def train_step_hook(self, *, outputs, labels):
+    def train_step_hook(self, *, outputs, labels, **kwargs):
         self.__train_accuracy += get_accuracy(outputs, labels)
 
-    def train_epoch_hook(self, *, dataset_size):
+    def train_epoch_hook(self, *, dataset_size, **kwargs):
         self.__train_accuracy /= dataset_size
 
-    def validation_step_hook(self, *, outputs, labels):
+    def validation_step_hook(self, *, outputs, labels, **kwargs):
         self.__validation_accuracy += get_accuracy(outputs, labels)
 
-    def validation_epoch_hook(self, *, dataset_size):
+    def validation_epoch_hook(self, *, dataset_size, **kwargs):
         self.__validation_accuracy /= dataset_size

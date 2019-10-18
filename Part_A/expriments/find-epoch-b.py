@@ -12,7 +12,7 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 epoch = 5000
-batch = 64
+batch = 8
 lr = 1e-3
 weight_decay = 1e-3
 save_epoch = 5000

@@ -109,7 +109,7 @@ def plot_train_val_loss(train_loss, val_loss):
     plt.show()
 
 
-def plot_batched_accuracies(acc_dict: dict, *, label_base: str = ''):
+def plot_batched_accuracies(acc_dict: dict, *, title: str = 'Validation accuracy against epoch', label_base: str = ''):
     keys, val_accs = list(acc_dict.keys()), list(acc_dict.values())
 
     orders = np.arange(1, len(val_accs[0]) + 1)
@@ -120,5 +120,5 @@ def plot_batched_accuracies(acc_dict: dict, *, label_base: str = ''):
     for i in range(len(val_accs)):
         ax.plot(orders, val_accs[i], label=(label_base + str(keys[i])))
         ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-    plt.title('Validation accuracy against epoch')
+    plt.title(title)
     plt.show()
