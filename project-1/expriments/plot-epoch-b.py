@@ -1,9 +1,7 @@
-import pickle
-
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 import torch.utils.data as tdata
-
 from dataset import simple_dataset, preprocessing
 from models.addmission_net import AdmissionNet
 from predict import predict

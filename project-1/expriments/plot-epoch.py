@@ -1,7 +1,5 @@
-import pickle
-
 import numpy as np
-
+import pickle
 # get data
 from utils.utils import plot_train_val_accuracies
 
