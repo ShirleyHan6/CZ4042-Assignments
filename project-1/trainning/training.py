@@ -1,12 +1,10 @@
-from abc import ABC
-from pathlib import Path
-
 import torch
 import torch.nn as nn
 import torch.utils.data as tdata
+from abc import ABC
+from pathlib import Path
 from torch.nn.modules.loss import _Loss
 from torch.optim.optimizer import Optimizer
-
 from utils.data import k_folds
 from utils.logger import Logger
 from utils.utils import get_accuracy

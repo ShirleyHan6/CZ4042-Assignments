@@ -1,17 +1,9 @@
 # Assignment for NTU Deep Learning
 
-## Install
-```shell script
-# create Conda environemnt
-conda env create -f environment.yml
+## Project 1
 
-conda install pytorch torchvision cudatoolkit=<your cuda version> -c pytorch -y
+See [here](./project-1).
 
-# activate the envrionment
-conda activate ntu-dl
+## Project 2
 
-# create output directory
-mkdir -p {log,output}
-```
-## Demo
-See experiments folder.
+See [here](./project-2).

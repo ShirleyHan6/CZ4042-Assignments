@@ -1,7 +1,5 @@
-import pickle
-
 import matplotlib.pyplot as plt
-
+import pickle
 # get data
 from utils.utils import plot_train_val_accuracies, plot_batched_accuracies
 

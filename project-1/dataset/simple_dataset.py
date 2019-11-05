@@ -1,8 +1,7 @@
-import typing
-
 import numpy as np
 import torch
 import torch.utils.data as tdata
+import typing
 
 
 class SimpleDataset(tdata.Dataset):

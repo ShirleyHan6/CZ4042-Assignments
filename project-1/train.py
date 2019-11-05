@@ -1,7 +1,6 @@
+import torch.nn as nn
 from datetime import datetime
 from pathlib import Path
-
-import torch.nn as nn
 from tqdm import trange
 
 from trainning.training import ClassificationTrainer, RegressionTrainer

@@ -1,8 +1,6 @@
-import pickle
-
 import numpy as np
+import pickle
 import torch
-
 from dataset import simple_dataset, preprocessing
 from models.seq_net import SeqNet
 from train import classification_train
