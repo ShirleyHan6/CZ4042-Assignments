@@ -10,8 +10,6 @@ parser.add_argument("-vocab_max_size", default=30000)
 args = parser.parse_args()
 
 
-
-
 class MakeVocab:
     def __init__(self, args):
         self.file_dir = os.path.join(args.file_dir, "train.csv")

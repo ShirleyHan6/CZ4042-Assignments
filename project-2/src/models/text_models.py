@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import torch.functional as F
-import random
+from numpy import random
 from configs import fixed_config
 
 random.seed(123)
@@ -10,7 +11,7 @@ if torch.cuda.is_available():
     torch.cuda_manual_seed_all(123)
 
 
-def __init_lstm_wt(lstm):
+def init_lstm_wt(lstm):
     for names in lstm._all_weights:
         for name in names:
             if name.startswith('weight_'):
@@ -75,3 +76,42 @@ class CNNEncoder(nn.Module):
         logits = self.label(fc_in)
 
         return logits
+
+
+class RNNEncoder(nn.Module):
+    def __init__(self, model_type, keep_probab):
+        super(RNNEncoder, self).__init__()
+        self.model_type = model_type
+        self.embedding = nn.Embedding(fixed_config.VOCAB_SIZE, fixed_config.EMB_DIM)
+        init_wt_normal(self.embedding.weight)
+
+        assert model_type in ["rnn", "gru", "lstm"]
+        if model_type == "rnn":
+            self.layer1 = nn.RNN(fixed_config.EMB_DIM, fixed_config.HID_DIM)
+        elif model_type == 'gru':
+            self.layer1 = nn.GRU(fixed_config.EMB_DIM, fixed_config.HID_DIM)
+        elif model_type == 'lstm':
+            self.layer1 = nn.LSTM(fixed_config.EMB_DIM, fixed_config.HID_DIM)
+        init_lstm_wt(self.layer1)
+
+        self.linear = nn.Linear(fixed_config.HID_DIM, fixed_config.NUM_CLASSES_TEXT)
+
+    def forward(self, x, seq_lens):
+        embedded = self.embedding(x)
+        packed = pack_padded_sequence(embedded, seq_lens, batch_first=True)
+
+        output, _ = self.layer1(packed)
+
+        output, _ = pad_packed_sequence(output, batch_first=True)
+
+        output = output.contiguous()
+        output = output.view(-1, fixed_config.HID_DIM)
+        logits = self.linear(output)
+
+        return logits
+
+
+
+
+
+

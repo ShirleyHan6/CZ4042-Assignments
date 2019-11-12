@@ -1,11 +1,13 @@
 import glob
 import random
 import struct
+import os
 
 PAD_TOKEN  = '[PAD]'
 UNKNOWN_TOKEN = '[UNK]'
 PAD_CHAR = ''
 UNKNOWN_CHAR = ''
+
 
 class Vocab:
     def __init_(self, args):
@@ -23,7 +25,7 @@ class Vocab:
         with open(self.word_file_dir) as word_f:
             for line in word_f:
                 pieces = line.split()
-                if len(pieces) !=2:
+                if len(pieces) != 2:
                     print('Warning: incorrectly formatted lin in vocabulary file: %s\n'%line)
                     continue
                 w = pieces[0]
