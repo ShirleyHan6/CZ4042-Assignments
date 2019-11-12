@@ -1,7 +1,7 @@
 from src.configs import configs
 import src.data_engine.text_dataset.dataset as dataset
 import numpy as np
-
+import queue
 
 class Example(object):
     def __init__(self, article, vocab):
@@ -43,7 +43,20 @@ class Batch(object):
                 self.enc_padding_mask[i][j] = 1
 
 # queue batch
-# class Batcher(object):
-#     BATCH_QUEUE_MAX=100
-#
-#     def __init(self):
+class Batcher(object):
+    BATCH_QUEUE_MAX=100
+
+    def __init(self, data_path, vocab, mode, batch_size, single_pass):
+        self._data_path = data_path
+        self._vocab = vocab
+        self._single_pass = single_pass
+        self.mode = mode
+        self.batch_size = batch_size
+        self._batch_queue = queue.Queue(self.BATCH_QUEUE_MAX)
+        self._example_queue = queue.Queue(self.BATCH_QUEUE_MAX * self.batch_size)
+
+        if single_pass:
+            self._num_example_q_threads = 1
+            self.num_batch_q_threads = 1
+            self.num_batch_q_threads = 1
+            self._bucketing_cache_size = 1
