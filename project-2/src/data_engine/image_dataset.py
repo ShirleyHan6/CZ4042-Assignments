@@ -1,31 +1,51 @@
 import pickle
+from typing import Callable
 
-import numpy as np
 import torch
 import torch.utils.data as tdata
-import typing
+
+from src.configs import DATA_DIR
+from src.data_engine.data_loader import preprocess_cifar, transform_cifar
 
 
 class CIFARDataset(tdata.Dataset):
-    def __init__(self, path: str):
+    __classes__ = ('plane', 'car', 'bird', 'cat',
+                   'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
+    def __init__(self, path: str, preprocess: Callable = None, transform: Callable = None):
         super().__init__()
-        self.path = path
+        self.transform = transform
+        # loading pickle
         with open(path, 'rb') as f:
             try:
-                self.samples = pickle.load(f)
-            except UnicodeDecodeError:  # python 3.x
+                dataset = pickle.load(f)
+            except UnicodeDecodeError:
                 f.seek(0)
-                self.samples = pickle.load(f, encoding='latin1')
-        self.images = np.array(self.samples['data'], dtype=np.float32)
-        self.labels = np.array(self.samples['labels'], dtype=np.float32)
+                dataset = pickle.load(f, encoding='latin1')
 
-    def __getitem__(self, idx: typing.Optional[int, torch.Tensor]):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-        image = self.images[idx]
-        label = self.labels[idx]
+        # preprocess
+        if preprocess:
+            dataset = preprocess(dataset)
+
+        self._images = torch.tensor(dataset['data'], dtype=torch.float)
+        self._labels = torch.tensor(dataset['labels'], dtype=torch.long)
+
+    def __getitem__(self, item):
+        image = self._images[item]
+        label = self._labels[item]
+
         sample = {'image': image, 'label': label}
 
+        if self.transform:
+            sample['image'] = self.transform(sample['image'])
+
+        return sample
+
     def __len__(self):
-        # returns length of data
-        return len(self.labels)
+        return self._images.shape[0]
+
+
+if __name__ == '__main__':
+    ds = CIFARDataset(DATA_DIR / 'data_batch_1.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
+    temp = ds[1:5]
+    print()
