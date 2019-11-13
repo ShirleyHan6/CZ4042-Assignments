@@ -8,7 +8,7 @@ DATA_DIR = BASE_DIR / '../data'
 OUTPUT_DIR = BASE_DIR / 'output'
 
 
-def _parse_config():
+def parse_config(config_path):
     class Struct(object):
         def __init__(self, di):
             for a, b in di.items():
@@ -17,11 +17,8 @@ def _parse_config():
                 else:
                     setattr(self, a, Struct(b) if isinstance(b, dict) else b)
 
-    with open(BASE_DIR / 'configs/config.yaml', 'r') as stream:
+    with open(config_path, 'r') as stream:
         try:
             return Struct(yaml.safe_load(stream))
         except yaml.YAMLError as exc:
             print(exc)
-
-
-configs = _parse_config()

@@ -9,7 +9,7 @@ import torchvision
 from torch import nn
 from torch.utils import data as tdata
 
-from src.configs import DATA_DIR, OUTPUT_DIR
+from src.configs import DATA_DIR, OUTPUT_DIR, BASE_DIR
 from src.data_engine.data_loader import preprocess_cifar, transform_cifar
 from src.data_engine.image_dataset import CIFARDataset
 from src.helper.utils import img_show
@@ -35,7 +35,9 @@ if __name__ == '__main__':
     test_loader = tdata.DataLoader(test_set, batch_size=test_num, shuffle=True)
 
     # load module
-    net = CIFARClassifier()
+    config_path = BASE_DIR / 'configs/image_classifier_baseline.yaml'
+    print('Using configuration: {}'.format(config_path))
+    net = CIFARClassifier(config_path)
     net.load_state_dict(torch.load(OUTPUT_DIR / 'image-classifier-baseline.pth'))
     net.eval()
 

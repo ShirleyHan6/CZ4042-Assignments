@@ -14,7 +14,7 @@ from torch import nn
 from torch import optim
 from torch.utils import data as tdata
 
-from src.configs import DATA_DIR, OUTPUT_DIR
+from src.configs import DATA_DIR, OUTPUT_DIR, BASE_DIR
 from src.data_engine.data_loader import preprocess_cifar, transform_cifar
 from src.data_engine.image_dataset import CIFARDataset
 from src.helper.training import train, test
@@ -35,7 +35,9 @@ def main():
     print('Finish loading')
 
     # model
-    net = CIFARClassifier().cuda()
+    config_path = BASE_DIR / 'configs/image_classifier_baseline.yaml'
+    print('Using configuration: {}'.format(config_path))
+    net = CIFARClassifier(config_path).cuda()
 
     # optimizer
     optimizer = optim.SGD(net.parameters(), lr=lr)
