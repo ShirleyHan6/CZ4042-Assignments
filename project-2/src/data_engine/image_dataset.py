@@ -9,8 +9,8 @@ from src.data_engine.data_loader import preprocess_cifar, transform_cifar
 
 
 class CIFARDataset(tdata.Dataset):
-    __classes__ = ('plane', 'car', 'bird', 'cat',
-                   'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    classes = ('plane', 'car', 'bird', 'cat',
+               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
     def __init__(self, path: str, preprocess: Callable = None, transform: Callable = None):
         super().__init__()
@@ -34,12 +34,12 @@ class CIFARDataset(tdata.Dataset):
         image = self._images[item]
         label = self._labels[item]
 
-        sample = {'image': image, 'label': label}
+        samples = {'image': image, 'label': label}
 
         if self.transform:
-            sample['image'] = self.transform(sample['image'])
+            samples['image'] = self.transform(samples['image'])
 
-        return sample
+        return samples
 
     def __len__(self):
         return self._images.shape[0]

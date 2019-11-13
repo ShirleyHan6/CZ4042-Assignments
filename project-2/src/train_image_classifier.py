@@ -79,6 +79,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    # from src.helper import get_accuracy, plot_train_and_test
-    # plot_train_and_test(OUTPUT_DIR / 'image-classifier-stat-1113-151010.pkl')
+    # main()
+    from src.helper.utils import plot_train_and_test
+
+    plot_train_and_test(OUTPUT_DIR / 'image-classifier-stat-baseline.pkl')

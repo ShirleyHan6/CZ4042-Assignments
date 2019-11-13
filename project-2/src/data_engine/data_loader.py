@@ -7,4 +7,5 @@ def preprocess_cifar(dataset: np.ndarray):
     return dataset
 
 
-transform_cifar = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+transform_cifar = transforms.Compose(
+    [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])

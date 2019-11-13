@@ -41,3 +41,11 @@ def plot_train_and_test(file_path: str):
     plt.xlabel('epoch')
     plt.ylabel('accuracy')
     plt.show()
+
+
+def img_show(img):
+    img = img / 2 + 0.5  # unnormalize
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.axis('off')
+    plt.show()
