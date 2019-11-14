@@ -4,8 +4,8 @@ from typing import Callable
 import torch
 import torch.utils.data as tdata
 
-from src.configs import DATA_DIR
-from src.data_engine.data_loader import preprocess_cifar, transform_cifar
+from configs import DATA_DIR
+from data_engine.data_loader import preprocess_cifar, transform_cifar
 
 
 class CIFARDataset(tdata.Dataset):

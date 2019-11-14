@@ -9,11 +9,11 @@ import torchvision
 from torch import nn
 from torch.utils import data as tdata
 
-from src.configs import DATA_DIR, OUTPUT_DIR, BASE_DIR
-from src.data_engine.data_loader import preprocess_cifar, transform_cifar
-from src.data_engine.image_dataset import CIFARDataset
-from src.helper.utils import img_show
-from src.models.classifier import CIFARClassifier
+from configs import DATA_DIR, OUTPUT_DIR, BASE_DIR
+from data_engine.data_loader import preprocess_cifar, transform_cifar
+from data_engine.image_dataset import CIFARDataset
+from helper.utils import img_show
+from models.classifier import CIFARClassifier
 
 layer_names = ['relu1', 'relu2', 'pool1', 'pool2']
 grids = {'relu1': (5, 10), 'pool1': (5, 10), 'relu2': (6, 10), 'pool2': (6, 10)}

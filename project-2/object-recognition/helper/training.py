@@ -8,10 +8,10 @@ from torch.nn.modules.loss import _Loss
 from torch.optim.optimizer import Optimizer
 from torch.utils import data as tdata
 
-from src.configs import DATA_DIR
-from src.data_engine.data_loader import preprocess_cifar, transform_cifar
-from src.data_engine.image_dataset import CIFARDataset
-from src.helper.utils import get_accuracy
+from configs import DATA_DIR
+from data_engine.data_loader import preprocess_cifar, transform_cifar
+from data_engine.image_dataset import CIFARDataset
+from helper.utils import get_accuracy
 
 
 def train(net: nn.Module,

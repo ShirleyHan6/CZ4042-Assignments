@@ -1,6 +1,6 @@
 from torch import nn
 
-from src.configs import parse_config
+from configs import parse_config
 
 
 class CIFARClassifier(nn.Module):
