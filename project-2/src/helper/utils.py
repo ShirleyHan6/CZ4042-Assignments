@@ -49,3 +49,11 @@ def img_show(img):
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.axis('off')
     plt.show()
+
+
+def object_to_dict(o: object):
+    result = vars(o)
+    for key, value in result.items():
+        if not isinstance(value, (int, float, list, dict, str)):
+            result[key] = object_to_dict(value)
+    return result

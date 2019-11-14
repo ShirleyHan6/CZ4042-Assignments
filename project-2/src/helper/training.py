@@ -8,6 +8,9 @@ from torch.nn.modules.loss import _Loss
 from torch.optim.optimizer import Optimizer
 from torch.utils import data as tdata
 
+from src.configs import DATA_DIR
+from src.data_engine.data_loader import preprocess_cifar, transform_cifar
+from src.data_engine.image_dataset import CIFARDataset
 from src.helper.utils import get_accuracy
 
 
@@ -99,3 +102,23 @@ def test(net: nn.Module,
 
     dataset_size = len(data_loader.dataset) if not data_size else data_size
     return loss / dataset_size, acc / dataset_size
+
+
+def load_cifar_dataset(batch_size: int, num_workers: int = 2):
+    """
+    Function for loading 1 batch CIFAR data in directory data/ with name data_batch_1.pkl and test_batch_trim.pkl.
+
+    Args:
+        batch_size (int): batch size for loading training and test data loader
+        num_workers (int): number of worker for fetching data from disk
+
+    Return:
+        A tuple of train data loader and test data loader
+    """
+    print('Loading data...')
+    train_set = CIFARDataset(DATA_DIR / 'data_batch_1.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
+    test_set = CIFARDataset(DATA_DIR / 'test_batch_trim.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
+    train_loader = tdata.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=2)
+    test_loader = tdata.DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=2)
+    print('Finish loading')
+    return train_loader, test_loader

@@ -12,12 +12,9 @@ import torch
 import tqdm
 from torch import nn
 from torch import optim
-from torch.utils import data as tdata
 
-from src.configs import DATA_DIR, OUTPUT_DIR, BASE_DIR
-from src.data_engine.data_loader import preprocess_cifar, transform_cifar
-from src.data_engine.image_dataset import CIFARDataset
-from src.helper.training import train, test
+from src.configs import OUTPUT_DIR, BASE_DIR
+from src.helper.training import train, test, load_cifar_dataset
 from src.models.classifier import CIFARClassifier
 
 lr = 0.001
@@ -27,12 +24,7 @@ epochs = 1000
 
 def main():
     # prepare data
-    print('Loading data...')
-    train_set = CIFARDataset(DATA_DIR / 'data_batch_1.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
-    test_set = CIFARDataset(DATA_DIR / 'test_batch_trim.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
-    train_loader = tdata.DataLoader(train_set, batch_size=bs, shuffle=True, num_workers=2)
-    test_loader = tdata.DataLoader(test_set, batch_size=bs, shuffle=True, num_workers=2)
-    print('Finish loading')
+    train_loader, test_loader = load_cifar_dataset(batch_size=bs)
 
     # model
     config_path = BASE_DIR / 'configs/image_classifier_baseline.yaml'

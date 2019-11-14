@@ -4,9 +4,13 @@ from src.configs import parse_config
 
 
 class CIFARClassifier(nn.Module):
-    def __init__(self, config: str):
+    def __init__(self, config):
         super().__init__()
-        cfg = parse_config(config)
+        if isinstance(config, str):
+            cfg = parse_config(config)
+        else:
+            cfg = config
+        self.cfg = cfg
         self.conv1 = nn.Conv2d(3, cfg.CONV1.CHANNEL_OUT, cfg.CONV1.KERNEL)
         self.relu1 = nn.ReLU()
         self.pool1 = nn.MaxPool2d(2, stride=2)
@@ -19,7 +23,7 @@ class CIFARClassifier(nn.Module):
     def forward(self, x):
         x = self.pool1(self.relu1(self.conv1(x)))
         x = self.pool2(self.relu2(self.conv2(x)))
-        x = x.view(-1, 60 * 4 * 4)
+        x = x.view(-1, self.cfg.CONV2.CHANNEL_OUT * 4 * 4)
         x = self.fc1(x)
         x = self.fc2(x)
         return x
