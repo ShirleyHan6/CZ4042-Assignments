@@ -50,3 +50,71 @@ Using the optimal number of filters, we train the classifier using:
     python plot_image_classifier.py --optimizer=adam configs/image_classifier_best.yaml
     ```
 
+## Part B: Text Classification
+### Question 1. 
+Char-CNN model
+Train:
+```shell script
+cd questions
+python q1.py
+```
+
+### Question 2.
+Word-CNN model
+```shell script
+cd questions
+python q2.py
+```
+
+### Question 3.
+Char-RNN model
+```shell script
+cd questions
+python q3.py
+```
+
+### Question 4.
+Word-RNN model
+```shell script
+cd questions
+python q4.py
+```
+
+### Question 5.
+change the keep_prob variable value in feed_dict in q1.py, q2.py, q3.py, q4.py and run
+```shell script
+cd questions
+python q1.py
+```
+
+
+### Question 6.
+1. Character-level: RNN, LSTM and double-gru: change the model_type variable value in q6_char.py and run
+```shell script
+cd questions
+python q6_char.py 
+```
+
+2. Word-level: RNN, LSTM and double-gru: change the model_type variable value in q6_word.py and run
+```shell script
+cd questions
+python q6_word.py 
+```
+
+3. Char-level gradient clipping
+```shell script
+cd questions
+python q6_word_gru_clip.py
+```
+
+4. Word-level gradient clipping
+```shell script
+cd questions
+python q6_char_gru_clip.py
+```
+
+Plotting: 
+```shell script
+python plot_graph.py -file_dir [pickle_file_saved]
+```
+
