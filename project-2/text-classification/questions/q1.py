@@ -60,8 +60,7 @@ with tf.Session() as sess:
         training_loss.append(loss_)
         testing_acc.append(acc_)
 
-        if e % 1 == 0:
-            t.set_description('epoch: %d, loss: %g, accuracy: %g' % (e, training_loss[e], testing_acc[e]))
+        t.set_description('epoch: %d, loss: %g, accuracy: %g' % (e, training_loss[e], testing_acc[e]))
 
 end = timer()
 print(end - start)

@@ -1,6 +1,5 @@
 import numpy as np
 import tensorflow as tf
-from timeit import default_timer as timer
 import pickle
 
 from read_data import read_data_chars
@@ -32,7 +31,8 @@ logits = char_rnn_model(x, keep_prob)
 
 # Optimizer
 entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=tf.one_hot(y_, MAX_LABEL), logits=logits))
-#gradient clipping
+
+# gradient clipping
 train_op = tf.train.AdamOptimizer(lr)
 gradients, variables = zip(*train_op.compute_gradients(entropy))
 gradients, _ = tf.clip_by_global_norm(gradients, 2.0)
@@ -45,7 +45,7 @@ accuracy = tf.reduce_mean(correct_prediction)
 N = len(x_train)
 idx = np.arange(N)
 
-# training
+# Training
 training_loss = []
 testing_acc = []
 with tf.Session() as sess:
@@ -62,10 +62,7 @@ with tf.Session() as sess:
     acc_ = accuracy.eval(feed_dict={x: x_test, y_: y_test, keep_prob:1})
     training_loss.append(loss_)
     testing_acc.append(acc_)
-
-
-    if e%1 == 0:
-      print('\riter: %d, entropy: %g, testing accuracy: %g'%(e, training_loss[e], testing_acc[e]), end='')
+    print('\riter: %d, entropy: %g, testing accuracy: %g'%(e, training_loss[e], testing_acc[e]), end='')
   print("\n")
 
 

@@ -57,10 +57,7 @@ with tf.Session() as sess:
     acc_ = accuracy.eval(feed_dict={x: x_test, y_: y_test, keep_prob:1})
     training_loss.append(loss_)
     testing_acc.append(acc_)
-
-
-    if e%1 == 0:
-      print('\riter: %d, entropy: %g, testing accuracy: %g'%(e, training_loss[e], testing_acc[e]), end='')
+    print('\riter: %d, entropy: %g, testing accuracy: %g'%(e, training_loss[e], testing_acc[e]), end='')
 
 
 end = timer()

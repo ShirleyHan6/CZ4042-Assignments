@@ -21,6 +21,7 @@ tf.set_random_seed(seed)
 
 
 x_train, y_train, x_test, y_test, n_words = data_read_words()
+
 # Create the model
 x = tf.placeholder(tf.int64, [None, MAX_DOCUMENT_LENGTH])
 y_ = tf.placeholder(tf.int64)
@@ -59,8 +60,7 @@ with tf.Session() as sess:
         training_loss.append(loss_)
         testing_acc.append(acc_)
 
-        if e % 1 == 0:
-            print('\riter: {}, entropy: {}, testing accuracy: {}'.format(e, training_loss[e], testing_acc[e]), end='')
+        print('\riter: {}, entropy: {}, testing accuracy: {}'.format(e, training_loss[e], testing_acc[e]), end='')
 
 
 end = timer()
