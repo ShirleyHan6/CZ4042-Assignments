@@ -3,15 +3,14 @@ Training and testing generic utility functions
 """
 
 import torch
-from torch import nn
-from torch.nn.modules.loss import _Loss
-from torch.optim.optimizer import Optimizer
-from torch.utils import data as tdata
-
 from configs import DATA_DIR
 from data_engine.data_loader import preprocess_cifar, transform_cifar
 from data_engine.image_dataset import CIFARDataset
 from helper.utils import get_accuracy
+from torch import nn
+from torch.nn.modules.loss import _Loss
+from torch.optim.optimizer import Optimizer
+from torch.utils import data as tdata
 
 
 def train(net: nn.Module,
@@ -118,7 +117,7 @@ def load_cifar_dataset(batch_size: int, num_workers: int = 2):
     print('Loading data...')
     train_set = CIFARDataset(DATA_DIR / 'data_batch_1.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
     test_set = CIFARDataset(DATA_DIR / 'test_batch_trim.pkl', preprocess=preprocess_cifar, transform=transform_cifar)
-    train_loader = tdata.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=2)
-    test_loader = tdata.DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=2)
+    train_loader = tdata.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    test_loader = tdata.DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
     print('Finish loading')
     return train_loader, test_loader
