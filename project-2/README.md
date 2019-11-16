@@ -4,18 +4,12 @@ Train the network by using mini-batch gradient descent learning. Set batch size 
 learning rate 𝛼 = 0.001. Images should be scaled.
 Train:
 ```shell script
-python plot_image_classifier.py --output=image-classifier-baseline configs/image_classifier_baseline.yaml
+python plot_image_classifier.py --output=image-classifier-baseline image-classifier-baseline.yaml
 ```
-Plot:
-```python
-from configs import OUTPUT_DIR
-from helper.utils import plot_train_and_test
-
-plot_train_and_test(OUTPUT_DIR / 'image-classifier-stat-baseline.pkl')
-```
+Plot test accuracies
 Plot feature maps:
 ```shell script
-python plot_feature_maps.py
+python train-and-plot-feature-maps.py plot --test_num=2
 ```
 
 ### Question 2.
@@ -23,14 +17,13 @@ Using a grid search, find the optimal numbers of feature maps for part (1) at th
 layers. Use the test accuracy to determine the optimal number of feature maps.
 Change the settings inside `src/grid_search_train_image_classifier.py`, and run:
 ```shell script
-python grid_search_train_image_classifier.py
+python grid-search-image-classifier-optim-channels.py search
 ```
 Some technique can be apply to speed up.
 
 For visualization,
-```python
-from grid_search_train_image_classifier import plot
-plot()
+```shell script
+python grid-search-image-classifier-optim-channels.py <path-to-saved-statistic-result>.pkl
 ```
 
 The optimal model configuration is in `src/configs/'
@@ -39,26 +32,18 @@ The optimal model configuration is in `src/configs/'
 Using the optimal number of filters, we train the classifier using:
 1. GD with momentum with 𝛾 = 0.1
     ```shell script
-    python plot_image_classifier.py --momentum=0.1 configs/image_classifier_best.yaml
+    python train-image-classifier-with-stat.py train --momentum=0.1 --output=image-classifier-momentum
     ```
 2. Using RMSProp algorithm for learning
     ```shell script
-    python plot_image_classifier.py --optimizer=rmsprop configs/image_classifier_best.yaml
+    python train-image-classifier-with-stat.py train --optimizer=rmsprop --output=image-classifier-rmsprop
     ```
 3. Using Adam optimizer for learning
     ```shell script
-    python plot_image_classifier.py --optimizer=adam configs/image_classifier_best.yaml
+    python train-image-classifier-with-stat.py train --optimizer=adam --output=image-classifier-adam
     ```
 
 ## Part B: Text Classification
-Make a data directory and put train_medium.csv and test_medium.csv into the folder
-```shell script
-mkdir data
-```
-Make an output directory
-```shell script
-mkdir output
-```
 ### Question 1. 
 Char-CNN model
 Train:
