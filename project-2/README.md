@@ -51,6 +51,14 @@ Using the optimal number of filters, we train the classifier using:
     ```
 
 ## Part B: Text Classification
+Make a data directory and put train_medium.csv and test_medium.csv into the folder
+```shell script
+mkdir data
+```
+Make an output directory
+```shell script
+mkdir output
+```
 ### Question 1. 
 Char-CNN model
 Train:
