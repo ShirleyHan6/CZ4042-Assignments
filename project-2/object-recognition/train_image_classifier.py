@@ -26,7 +26,7 @@ def parse_args():
     parser.add_argument('--momentum', type=float, default=0, help='momentum')
     parser.add_argument('--optimizer', type=str, default='sgd', help='optimizer for training')
     parser.add_argument('--output', type=str, default='', help='output name of model and statistic result')
-    parser.add_argument('config', type=str, required=True, help='model configuration yaml path')
+    parser.add_argument('config', type=str, help='model configuration yaml path')
     return parser.parse_args()
 
 

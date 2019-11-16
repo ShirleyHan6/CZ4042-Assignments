@@ -33,7 +33,7 @@ def parse_args():
     parser_train.add_argument('--lr', type=float, default=1e-3, help='learning rate')
     parser_train.add_argument('--output', type=str, default='image-classifier',
                               help='output name of model and statistic result')
-    parser_train.add_argument('config', type=str, required=True, help='model configuration yaml path')
+    parser_train.add_argument('config', type=str, help='model configuration yaml path')
     parser_train.set_defaults(func=train)
 
     parser_plot = subparsers.add_parser('plot')
@@ -47,7 +47,7 @@ def train(args):
     args.optimizer = 'sgd'
     content = train_image_classifier(args)
     # save statistic
-    with open(OUTPUT_DIR / '{}-stat-{:s}.pkl'.format(args.output, content['name_seed']), 'wb') as f:
+    with open(OUTPUT_DIR / '{}-stat-{:s}.pkl'.format(args.output, content['info']['name_seed']), 'wb') as f:
         pickle.dump(content, f)
 
 
