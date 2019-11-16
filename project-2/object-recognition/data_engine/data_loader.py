@@ -3,7 +3,7 @@ from torchvision import transforms
 
 
 def preprocess_cifar(dataset: np.ndarray):
-    dataset['data'] = (dataset['data'] / 256).reshape(-1, 3, 32, 32)
+    dataset['data'] = (dataset['data'] / 255).reshape(-1, 3, 32, 32)
     return dataset
 
 

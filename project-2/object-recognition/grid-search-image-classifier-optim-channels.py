@@ -16,12 +16,8 @@ from configs import OUTPUT_DIR, BASE_DIR, parse_config
 from helper.utils import object_to_dict
 from train_image_classifier import train_image_classifier
 
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-series = 5
-conv1_channels = [55]
-conv2_channels = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+conv1_channels = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+conv2_channels = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
 
 
 def parse_args():
@@ -85,9 +81,9 @@ def search(args):
 
     # report best parameter and export
     print('best parameters: ' + str(best_parameters))
-    with open(BASE_DIR / 'configs/image_classifier_best-{}.yaml'.format(series), 'w') as f:
+    with open(BASE_DIR / 'configs/image_classifier_best.yaml', 'w') as f:
         yaml.safe_dump(object_to_dict(cfg), f)
-    with open(OUTPUT_DIR / 'image-classifier-tune-stat-{}.pkl'.format(series), 'wb') as f:
+    with open(OUTPUT_DIR / 'image-classifier-tune-stat.pkl', 'wb') as f:
         pickle.dump({'conv1_channel': conv1_channels, 'conv2_channel': conv2_channels, 'accs': global_test_accs}, f)
 
 

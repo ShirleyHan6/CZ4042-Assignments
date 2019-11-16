@@ -7,8 +7,7 @@ dependencies:
   - attrs=19.2.0
   - backcall=0.1.0
   - blas=1.0
-  - bleach=3.1.0
-  - ca-certificates=2019.8.28
+  - ca-certificates=2019.10.16
   - certifi=2019.9.11
   - cffi=1.12.3
   - cudatoolkit=9.0
@@ -88,6 +87,7 @@ dependencies:
   - python-dateutil=2.8.0
   - pytorch=1.1.0
   - pytz=2019.3
+  - pyyaml=5.1.2
   - pyzmq=18.1.0
   - qt=5.9.7
   - qtconsole=4.5.5
@@ -112,8 +112,22 @@ dependencies:
   - wheel=0.33.6
   - widgetsnbextension=3.5.1
   - xz=5.2.4
+  - yaml=0.1.7
   - zeromq=4.3.1
   - zlib=1.2.11
   - zstd=1.3.7
+  - pip:
+      - absl-py==0.8.1
+      - bleach==1.5.0
+      - blessings==1.7
+      - gpustat==0.6.0
+      - html5lib==0.9999999
+      - markdown==3.1.1
+      - nvidia-ml-py3==7.352.0
+      - protobuf==3.10.0
+      - psutil==5.6.5
+      - tensorflow-gpu==1.5.1
+      - tensorflow-tensorboard==1.5.1
+      - werkzeug==0.16.0
 prefix: /home/lym/anaconda3/envs/ntu-dl
 
