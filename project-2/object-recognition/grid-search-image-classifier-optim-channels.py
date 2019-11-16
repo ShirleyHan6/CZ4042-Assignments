@@ -43,7 +43,6 @@ def parse_args():
 
 
 def search(args):
-
     # model
     cfg = parse_config(args.config)
 
@@ -101,10 +100,14 @@ def plot(args):
         stat = pickle.load(f)
     channels1, channels2, acc_heat = stat['conv1_channel'], stat['conv2_channel'], stat['accs']
 
+    acc_heat *= 100
+    channels1 = ['' if i % 2 else s for i, s in enumerate(channels1, 0)]
+    channels2 = ['' if i % 2 else s for i, s in enumerate(channels2, 0)]
+
     # plot
     plt.figure()
     fig, ax = plt.subplots()
-    im = ax.imshow(acc_heat)
+    im = ax.imshow(acc_heat, cmap='YlGn')
 
     # set ticks
     ax.set_yticks(np.arange(len(channels1)))
@@ -112,17 +115,25 @@ def plot(args):
     ax.set_yticklabels(channels1)
     ax.set_xticklabels(channels2)
 
-    # rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha='right',
-             rotation_mode='anchor')
+    # Turn spines off and create white grid.
+    for edge, spine in ax.spines.items():
+        spine.set_visible(False)
+
+    ax.set_yticks(np.arange(len(channels1) + 1) - 0.5, minor=True)
+    ax.set_xticks(np.arange(len(channels2) + 1) - 0.5, minor=True)
+    ax.grid(which="minor", color="w", linestyle='-', linewidth=1.5)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
     # add legend
     plt.colorbar(im)
 
     # Loop over data dimensions and create text annotations.
     for i in range(len(channels1)):
         for j in range(len(channels2)):
-            ax.text(j, i, round(acc_heat[i, j], 2),
-                    ha='center', va='center', color='w', size='x-small')
+            ax.text(j, i, round(acc_heat[i, j], 1),
+                    ha='center', va='center',
+                    color='w' if acc_heat[i, j] > 57.5 else 'grey',
+                    size='xx-small')
 
     ax.set_title('Test accuracy over conv1 out channels and conv2 out channels')
     fig.tight_layout()
