@@ -4,17 +4,16 @@ output/image-classifier-{datetime}.pth and output/image-classifier-stat-{datetim
 The statistic result can be plotted by function helper.plot_train_and_test.
 """
 import argparse
-import pickle
-from datetime import datetime
 
 import numpy as np
 import torch
 import tqdm
+from datetime import datetime
 from torch import nn
 from torch import optim
 from torch.optim.rmsprop import RMSprop
 
-from configs import OUTPUT_DIR, BASE_DIR
+from configs import OUTPUT_DIR, parse_config
 from helper.training import train, test, load_cifar_dataset
 from models.classifier import CIFARClassifier
 
@@ -31,7 +30,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main(args):
+def train_image_classifier(args):
     lr = args.lr
     epochs = args.epoch
     bs = args.bs
@@ -40,9 +39,9 @@ def main(args):
     train_loader, test_loader = load_cifar_dataset(batch_size=bs)
 
     # model
-    config_path = BASE_DIR / 'configs/image_classifier_best.yaml'
-    print('Using configuration: {}'.format(config_path))
-    net = CIFARClassifier(config_path).cuda()
+    print('Using configuration: {}'.format(args.config))
+    config = parse_config(args.config)
+    net = CIFARClassifier(config).cuda()
 
     # optimizer
     if args.optimizer == 'sgd':
@@ -86,13 +85,13 @@ def main(args):
             best_test_loss = test_loss
             torch.save(net.state_dict(), OUTPUT_DIR / '{}-{:s}.pth'.format(args.output, name_seed))
 
-    # save statistic
-    with open(OUTPUT_DIR / '{}-stat-{:s}.pkl'.format(args.output, name_seed), 'wb') as f:
-        training_info = {'batch_size': bs, 'epoch': epochs, 'lr': lr}
-        stat = {'train_loss': train_losses, 'train_acc': train_accs, 'test_loss': test_losses, 'test_acc': test_accs}
-        content = {'info': training_info, 'stat': stat}
-        pickle.dump(content, f)
+    training_info = {'batch_size': bs, 'epoch': epochs, 'lr': lr,
+                     'name_seed': name_seed}
+    stat = {'train_loss': train_losses, 'train_acc': train_accs, 'test_loss': test_losses, 'test_acc': test_accs}
+    content = {'info': training_info, 'stat': stat}
+
+    return content
 
 
 if __name__ == '__main__':
-    main(parse_args())
+    train_image_classifier(parse_args())

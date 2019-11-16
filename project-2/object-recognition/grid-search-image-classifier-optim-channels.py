@@ -3,45 +3,56 @@ Train image classifier given model configuration. The trained model and statisti
 output/image-classifier-{datetime}.pth and output/image-classifier-stat-{datetime}.pkl respectively.
 The statistic result can be plotted by function helper.plot_train_and_test.
 """
-
+import argparse
 import os
 import pickle
-from datetime import datetime
 
 import numpy as np
-import torch
-import tqdm
 import yaml
+from datetime import datetime
 from matplotlib import pyplot as plt
-from torch import nn
-from torch import optim
 
 from configs import OUTPUT_DIR, BASE_DIR, parse_config
-from helper.training import train, test, load_cifar_dataset
 from helper.utils import object_to_dict
-from models.classifier import CIFARClassifier
+from train_image_classifier import train_image_classifier
 
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 series = 5
-lr = 0.001
-bs = 128
-epochs = 800
 conv1_channels = [55]
 conv2_channels = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
 
 
-def main():
-    # prepare data
-    train_loader, test_loader = load_cifar_dataset(batch_size=bs)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+    parser_search = subparsers.add_parser('search')
+    parser_search.add_argument('--epoch', type=int, default=800, help='epoch number for training')
+    parser_search.add_argument('--bs', type=int, default=128, help='batch size for training and testing')
+    parser_search.add_argument('--lr', type=float, default=1e-3, help='learning rate')
+    parser_search.add_argument('--output', type=str, default='image-classifier-tune',
+                               help='output name of model and statistic result')
+    parser_search.add_argument('--config', type=str, default=str(BASE_DIR / 'configs/image-classifier-baseline.yaml'),
+                               help='template configuration')
+    parser_search.set_defaults(func=search)
+    parser_plot = subparsers.add_parser('plot', help='plot heat map of test accuracy')
+    parser_plot.add_argument('file_path', type=str, help='File path to the saved statistic file')
+    parser_plot.set_defaults(func=plot)
+    return parser.parse_args()
+
+
+def search(args):
 
     # model
-    config_path = BASE_DIR / 'configs/image_classifier_baseline.yaml'
-    cfg = parse_config(config_path)
+    cfg = parse_config(args.config)
 
     best_global_test_acc = 0.
     global_test_accs = np.zeros((len(conv1_channels), len(conv2_channels)))
+
+    # temp config name
+    name_seed = datetime.now().strftime('%m%d-%H%M%S%s')
+    config_name = BASE_DIR / 'configs/image-classifier-temp-{}.yaml'.format(name_seed)
     best_parameters = None
     for i, conv1_channel_out in enumerate(conv1_channels, 0):
         for j, conv2_channel_out in enumerate(conv2_channels, 0):
@@ -49,49 +60,29 @@ def main():
             # build cfg
             cfg.CONV1.CHANNEL_OUT = conv1_channel_out
             cfg.CONV2.CHANNEL_OUT = conv2_channel_out
+            with open(config_name, 'w') as f:
+                yaml.safe_dump(object_to_dict(cfg), f)
 
-            net = CIFARClassifier(cfg).cuda()
+            # override args
+            args.optimizer = 'sgd'
+            args.config = config_name
 
-            # optimizer
-            optimizer = optim.SGD(net.parameters(), lr=lr)
+            # train
+            content = train_image_classifier(args)
 
-            # loss
-            loss = nn.CrossEntropyLoss()
-
-            # statistics
-            train_losses = np.zeros(epochs, dtype=np.float)
-            train_accs = np.zeros(epochs, dtype=np.float)
-            test_losses = np.zeros(epochs, dtype=np.float)
-            test_accs = np.zeros(epochs, dtype=np.float)
-            best_test_acc = 0.
-
-            # misc
-            name_seed = datetime.now().strftime('%m%d-%H%M%S')
-            print('Training with: conv1 out channels = {}, conv2 out channels = {}'.format(conv1_channel_out,
-                                                                                           conv2_channel_out))
-
-            t = tqdm.trange(epochs)
-            for epoch in t:
-                train_loss, train_acc = train(net, data_loader=train_loader, optimizer=optimizer, criterion=loss)
-                test_loss, test_acc = test(net, data_loader=test_loader, criterion=loss)
-
-                # process statistics
-                train_losses[epoch], train_accs[epoch] = train_loss, train_acc
-                test_losses[epoch], test_accs[epoch] = test_loss, test_acc
-
-                t.set_description('[epoch {:d}] train loss {:g} | acc {:g} || val loss {:g} | acc {:g}'
-                                  .format(epoch, train_loss, train_acc, test_loss, test_acc))
-
-                # save model
-                if test_acc > best_test_acc:
-                    best_test_acc = test_acc
-                    torch.save(net.state_dict(), OUTPUT_DIR / 'image-classifier-tune-{:s}.pth'.format(name_seed))
+            # obtain best test accuracy
+            test_acc: np.ndarray = content['stat']['test_acc']
+            # noinspection PyArgumentList
+            best_test_acc = test_acc.max()
 
             # update best accs
             global_test_accs[i][j] = best_test_acc
             if best_global_test_acc < best_test_acc:
                 best_global_test_acc = best_test_acc
                 best_parameters = {'conv1_channel_out': conv1_channel_out, 'conv2_channel_out': conv2_channel_out}
+
+    # remove temp config
+    os.remove(config_name)
 
     # report best parameter and export
     print('best parameters: ' + str(best_parameters))
@@ -101,12 +92,12 @@ def main():
         pickle.dump({'conv1_channel': conv1_channels, 'conv2_channel': conv2_channels, 'accs': global_test_accs}, f)
 
 
-def plot():
+def plot(args):
     """
     Plot heat map of test accuracy over conv1 channels and conv2 channels
     """
     # get statistic results
-    with open(OUTPUT_DIR / 'image-classifier-tune-stat.pkl', 'rb') as f:
+    with open(args.file_path, 'rb') as f:
         stat = pickle.load(f)
     channels1, channels2, acc_heat = stat['conv1_channel'], stat['conv2_channel'], stat['accs']
 
@@ -139,4 +130,5 @@ def plot():
 
 
 if __name__ == '__main__':
-    main()
+    args_ = parse_args()
+    args_.func(args_)
